@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require 'pp'
 require 'stringio'
 
 require_relative 'thread_pool'
@@ -263,6 +263,10 @@ module Puma
       @status = :run
 
       @thread_pool = ThreadPool.new(thread_name, options) { |client| process_client client }
+
+      puts "\n\n"
+      pp @thread_pool.inspect
+      puts "\n\n"
 
       if @queue_requests
         @reactor = Reactor.new(@io_selector_backend) { |c|

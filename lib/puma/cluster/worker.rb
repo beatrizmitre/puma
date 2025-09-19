@@ -28,6 +28,7 @@ module Puma
       end
 
       def run
+        log "\n\nRunning worker #{@index} (pid: #{Process.pid})"
         title  = "puma: cluster worker #{index}: #{master}"
         title += " [#{@options[:tag]}]" if @options[:tag] && !@options[:tag].empty?
         $0 = title

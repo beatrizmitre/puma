@@ -36,6 +36,7 @@ module Puma
 
       begin
         loop do
+          @log_writer.write "inside stop_workers loop"
           wait_workers
           break if @workers.reject {|w| w.pid.nil?}.empty?
           sleep 0.2
@@ -227,6 +228,7 @@ module Puma
                               launcher: @launcher,
                               pipes: pipes,
                               server: server
+      @log_writer.write "new worker: #{new_worker.index} (pid: #{Process.pid})"
       new_worker.run
     end
 
@@ -351,7 +353,7 @@ module Puma
           exit! 0
         else
           @launcher.close_binder_listeners
-
+          log "will call stop workers now"
           stop_workers
           stop
           @events.fire_after_stopped!

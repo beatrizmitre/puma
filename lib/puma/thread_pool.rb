@@ -131,6 +131,8 @@ module Puma
     def spawn_thread
       @spawned += 1
 
+      puts "\nSpawned: #{@spawned}"
+
       trigger_before_thread_start_hooks
       th = Thread.new(@spawned) do |spawned|
         Puma.set_thread_name '%s tp %03i' % [@name, spawned]
@@ -166,6 +168,7 @@ module Puma
               end
             end
 
+            puts "To do: #{todo.inspect}"
             work = todo.shift
           end
 
@@ -176,6 +179,8 @@ module Puma
           end
         end
       end
+
+      puts "thread: #{th.inspect}"
 
       @workers << th
 
