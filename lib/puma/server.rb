@@ -607,6 +607,7 @@ module Puma
     # Wait for all outstanding requests to finish.
     #
     def graceful_shutdown
+      @log_writer.write "\n\nserver.graceful_shutdown called\n"
       if options[:shutdown_debug]
         threads = Thread.list
         total = threads.size
@@ -624,6 +625,7 @@ module Puma
 
       if @status != :restart
         @binder.close
+        @log_writer.write "\n\nbinder closed\n"
       end
 
       if @thread_pool
@@ -631,6 +633,7 @@ module Puma
           @thread_pool.shutdown timeout.to_f
         else
           @thread_pool.shutdown
+          @log_writer.write "\n\nthread_pool.shutdown called\n"
         end
       end
     end
@@ -653,7 +656,9 @@ module Puma
     # off the request queue before finally exiting.
 
     def stop(sync=false)
+      @log_writer.write "\n\nserver.stop called\n"
       notify_safely(STOP_COMMAND)
+      @log_writer.write "\n\nthread: #{@thread}.join if #{@thread} && sync #{sync}\n"
       @thread.join if @thread && sync
     end
 

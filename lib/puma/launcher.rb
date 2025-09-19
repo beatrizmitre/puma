@@ -151,6 +151,7 @@ module Puma
     # Begin async shutdown of the server gracefully
     def stop
       @status = :stop
+      @log_writer.write "Launcher status: #{@status}\n"
       @runner.stop
     end
 
@@ -451,6 +452,7 @@ module Puma
 
       begin
         Signal.trap "SIGINT" do
+          @log_writer.write "\nreceived SIGINT, stopping\n"
           stop
         end
       rescue Exception
